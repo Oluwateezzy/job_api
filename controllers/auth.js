@@ -4,8 +4,8 @@ const { BadRequestError, UnauthenticatedError } = require("../errors");
 require("dotenv").config();
 
 const register = async(req, res) => {
-    const user = User.create({...req.body });
-    const token = User.createJWT();
+    const user = await User.create({...req.body });
+    const token = user.createJWT();
     res.status(StatusCodes.CREATED).json({ user, token });
 };
 
@@ -16,7 +16,7 @@ const login = async(req, res) => {
         throw new BadRequestError("Please Provide email and password");
     }
 
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
         throw new UnauthenticatedError("Invalid credentials");
